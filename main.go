@@ -52,8 +52,12 @@ func main() {
 		panic(fmt.Sprintf("Error initializing s3 reader: %s", err.Error()))
 	}
 
-	modelStore := model.LoadModels(s3Reader, model.InitMemoryStore())
-	modelStore.Get("test")
+	modelStore := model.InitMemoryStore()
+
+	// Cron loader is a process that runs in background that updates the
+	// model every n seconds. The Store operations have to be thread safe.
+	modelCronLoader := model.InitCronLoader(s3Reader, modelStore)
+	go modelCronLoader.Start(10)
 
 	if err != nil {
 		panic(fmt.Sprintf("Error initializing model store: %s", err.Error()))
@@ -62,13 +66,13 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	router := gin.Default()
 
-	predictorController := controller.RewardPredictorController{}
+	predictorController := controller.RewardPredictorController{ModelStore: modelStore}
 
 	v1 := router.Group("/api/v1")
 	{
 		eg := v1.Group("/prediction")
 		{
-			eg.GET("/", predictorController.PredictExperimentRewards)
+			eg.POST("/", predictorController.PredictExperimentRewards)
 		}
 	}
 

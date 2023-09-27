@@ -15,7 +15,71 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/prediction": {
+            "post": {
+                "description": "Predicts rewards for a given experiment.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Predict experiment rewards using ONNX models loaded in S3.",
+                "operationId": "predict-experiment-rewards",
+                "parameters": [
+                    {
+                        "description": "Prediction Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.PredictionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.PredictionResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.PredictionRequest": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "model": {
+                    "type": "string"
+                },
+                "sample": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "controller.PredictionResponse": {
+            "type": "object",
+            "properties": {
+                "extra_data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "prediction": {
+                    "type": "number"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

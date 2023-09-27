@@ -9,6 +9,6 @@ type File struct {
 }
 
 type Prediction struct {
-	Label         int
+	Label         float32
 	Probabilities []float32
 }

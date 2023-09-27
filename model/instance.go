@@ -2,11 +2,13 @@ package model
 
 import (
 	ort "github.com/yalue/onnxruntime_go"
+	"jackpot-mab/reward-predictor/exchange"
 	"log"
 )
 
 type Instance interface {
-	Predict(features []float32) int
+	Predict(features []float32) (exchange.Prediction, error)
+	Checksum() string
 }
 
 type LoadedModel struct {
@@ -33,20 +35,25 @@ func Load(modelBytes []byte, name string, checksum string) (Instance, error) {
 	}, nil
 }
 
-func (l *LoadedModel) Predict(features []float32) int {
+func (l *LoadedModel) Checksum() string {
+	return l.checksum
+}
 
-	inputData := features
+func (l *LoadedModel) Predict(features []float32) (exchange.Prediction, error) {
 
-	inputTensor, e := ort.NewTensor(ort.NewShape(1, 8), inputData)
+	inputTensor, e := ort.NewTensor(ort.NewShape(1, int64(len(features))), features)
 	defer inputTensor.Destroy()
 
+	// TODO pensado para cuando hay que adivinar si es 0 o 1 (click o no click)
+	// Si soportamos más clases o regresiones, habría que reveer de dónde sacamos las clases de output.
 	outputTensorProba, e := ort.NewEmptyTensor[float32](ort.NewShape(1, 2))
 	outputTensorLabel, e := ort.NewEmptyTensor[int8](ort.NewShape(1))
 	defer outputTensorProba.Destroy()
 	defer outputTensorLabel.Destroy()
 
 	if e != nil {
-		log.Printf("Erro %v", e)
+		log.Printf("There was an error creating the tensors %v", e)
+		return exchange.Prediction{}, e
 	}
 
 	e = l.modelSession.Run(
@@ -57,12 +64,12 @@ func (l *LoadedModel) Predict(features []float32) int {
 		log.Printf("Error creating the session: %v", e)
 	}
 
-	outputData := outputTensorProba.GetData()
-	print(outputData)
+	outputProbabilities := outputTensorProba.GetData()
+	outputLabel := outputTensorLabel.GetData()
 
-	outpu2 := outputTensorLabel.GetData()
-	print(outpu2)
-
-	return int(outpu2[0])
+	return exchange.Prediction{
+		Label:         float32(outputLabel[0]),
+		Probabilities: outputProbabilities,
+	}, nil
 
 }
