@@ -7,6 +7,7 @@ import (
 	"sync"
 )
 
+// Store is an in memory ML models store
 type Store interface {
 	Get(modelId string) (Instance, error)
 	Changed(modelId string, checksum string) bool

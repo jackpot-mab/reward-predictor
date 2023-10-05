@@ -52,7 +52,7 @@ func (r *RewardPredictorController) PredictExperimentRewards(g *gin.Context) {
 
 	if err != nil {
 		log.Print("error occurred", err)
-		g.JSON(http.StatusInternalServerError, err)
+		g.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 

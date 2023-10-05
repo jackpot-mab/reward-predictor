@@ -6,6 +6,9 @@
 - Some algorithms may need other estimations to be performed apart from the model prediction. Check de docs
 for more info.
 
+![reward-predictor diagram](diagrams/reward-predictor.drawio.png)
+
+
 ## Set up
 
 ### Set up S3 locally

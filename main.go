@@ -66,7 +66,9 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	router := gin.Default()
 
-	predictorController := controller.RewardPredictorController{ModelStore: modelStore}
+	predictorController := controller.RewardPredictorController{
+		ModelStore: modelStore,
+	}
 
 	v1 := router.Group("/api/v1")
 	{

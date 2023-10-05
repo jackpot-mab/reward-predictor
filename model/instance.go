@@ -62,6 +62,7 @@ func (l *LoadedModel) Predict(features []float32) (exchange.Prediction, error) {
 
 	if e != nil {
 		log.Printf("Error creating the session: %v", e)
+		return exchange.Prediction{}, e
 	}
 
 	outputProbabilities := outputTensorProba.GetData()
