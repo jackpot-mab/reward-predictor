@@ -1,6 +1,10 @@
 definitions:
   controller.PredictionRequest:
     properties:
+      classes:
+        items:
+          type: string
+        type: array
       context:
         items:
           type: number
@@ -12,9 +16,6 @@ definitions:
     type: object
   controller.PredictionResponse:
     properties:
-      extra_data:
-        additionalProperties: true
-        type: object
       prediction:
         type: number
     type: object

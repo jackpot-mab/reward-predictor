@@ -68,6 +68,8 @@ func (ms *MemoryStore) add(modelFile *exchange.File) error {
 	defer ms.mu.Unlock()
 
 	modelBytes, err := io.ReadAll(modelFile.Body)
+	defer modelFile.Body.Close()
+
 	if err != nil {
 		return err
 	}

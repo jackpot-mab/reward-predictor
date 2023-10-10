@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"jackpot-mab/reward-predictor/model"
 	"log"
-	"math/rand"
 	"net/http"
 )
 
@@ -17,11 +16,11 @@ type PredictionRequest struct {
 	Model   string    `json:"model"`
 	Sample  bool      `json:"sample"`
 	Context []float32 `json:"context"`
+	Classes []string  `json:"classes"`
 }
 
 type PredictionResponse struct {
-	Prediction float32                `json:"prediction"`
-	ExtraData  map[string]interface{} `json:"extra_data"`
+	Prediction float32 `json:"prediction"`
 }
 
 // PredictExperimentRewards godoc
@@ -48,7 +47,7 @@ func (r *RewardPredictorController) PredictExperimentRewards(g *gin.Context) {
 		return
 	}
 
-	prediction, err := modelInstance.Predict(predictionRequest.Context)
+	prediction, err := modelInstance.Predict(predictionRequest.Context, len(predictionRequest.Classes))
 
 	if err != nil {
 		log.Print("error occurred", err)
@@ -63,10 +62,6 @@ func (r *RewardPredictorController) PredictExperimentRewards(g *gin.Context) {
 
 	g.JSON(http.StatusOK, PredictionResponse{
 		Prediction: prediction.Label,
-		ExtraData: map[string]interface{}{
-			// TODO randint for now. but we have to define a way to implement this
-			"pulls": rand.Intn(99) + 1,
-		},
 	})
 
 }

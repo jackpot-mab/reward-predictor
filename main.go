@@ -57,7 +57,7 @@ func main() {
 	// Cron loader is a process that runs in background that updates the
 	// model every n seconds. The Store operations have to be thread safe.
 	modelCronLoader := model.InitCronLoader(s3Reader, modelStore)
-	go modelCronLoader.Start(10)
+	go modelCronLoader.Start(120)
 
 	if err != nil {
 		panic(fmt.Sprintf("Error initializing model store: %s", err.Error()))

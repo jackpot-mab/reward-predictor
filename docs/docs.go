@@ -53,6 +53,12 @@ const docTemplate = `{
         "controller.PredictionRequest": {
             "type": "object",
             "properties": {
+                "classes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "context": {
                     "type": "array",
                     "items": {
@@ -70,10 +76,6 @@ const docTemplate = `{
         "controller.PredictionResponse": {
             "type": "object",
             "properties": {
-                "extra_data": {
-                    "type": "object",
-                    "additionalProperties": true
-                },
                 "prediction": {
                     "type": "number"
                 }
