@@ -29,7 +29,7 @@ type PredictionResponse struct {
 // @ID predict-experiment-rewards
 // @Accept json
 // @Produce json
-// @Param body body PredictionRequest true "Prediction Request"
+// @Param body PredictionRequest true "Prediction Request"
 // @Success 200 {object} PredictionResponse
 // @Router /prediction [post]
 func (r *RewardPredictorController) PredictExperimentRewards(g *gin.Context) {
