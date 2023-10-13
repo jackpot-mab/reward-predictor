@@ -36,7 +36,7 @@ func main() {
 	endpoint := os.Getenv("ENDPOINT")
 	s3ForcePathStyle, err := strconv.ParseBool(os.Getenv("S3_FORCE_PATH_STYLE"))
 
-	if err := godotenv.Load(); err != nil {
+	if err != nil {
 		log.Fatalf("Error loading s3 force path style prop: %v", err)
 	}
 
