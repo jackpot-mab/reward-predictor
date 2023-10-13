@@ -14,6 +14,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 )
 
@@ -23,9 +24,16 @@ func healthCheck(c *gin.Context) {
 
 func main() {
 
-	ort.SetSharedLibraryPath("third_party/libonnxruntime.1.15.1.dylib")
+	shLib := getDefaultSharedLibPath()
+	log.Printf("Shared lib onnxruntime: %v", shLib)
+
+	ort.SetSharedLibraryPath(fmt.Sprintf("third_party/%s", shLib))
 	err := ort.InitializeEnvironment()
 	defer ort.DestroyEnvironment()
+
+	if err != nil {
+		log.Printf("Error initializing onnxruntime: %v", err)
+	}
 
 	if err := godotenv.Load(); err != nil {
 		log.Printf("Error loading .env file: %v", err)
@@ -81,4 +89,24 @@ func main() {
 	router.GET("/", healthCheck)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.Run("0.0.0.0:8092")
+}
+
+func getDefaultSharedLibPath() string {
+	// For now, we only include libraries for x86_64 windows, ARM64 darwin, and
+	// x86_64 or ARM64 Linux. In the future, libraries may be added or removed.
+	if runtime.GOOS == "darwin" {
+		if runtime.GOARCH == "arm64" {
+			return "libonnxruntime.1.15.1.dylib"
+		}
+	}
+	if runtime.GOOS == "linux" {
+		if runtime.GOARCH == "arm64" {
+			return "libonnxruntime.arm.so.1.15.1"
+		}
+		return "libonnxruntime.intel.so.1.15.1"
+	}
+	fmt.Printf("Unable to determine a path to the onnxruntime shared library"+
+		" for OS \"%s\" and architecture \"%s\".\n", runtime.GOOS,
+		runtime.GOARCH)
+	return ""
 }
