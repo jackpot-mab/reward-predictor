@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"jackpot-mab/reward-predictor/metrics"
 	"jackpot-mab/reward-predictor/model"
 	"log"
 	"net/http"
@@ -59,6 +60,8 @@ func (r *RewardPredictorController) PredictExperimentRewards(g *gin.Context) {
 		// sample prediction TODO
 		// to test a thompson sampling-like model.
 	}
+
+	metrics.ModelPredictions.WithLabelValues(predictionRequest.Model).Inc()
 
 	g.JSON(http.StatusOK, PredictionResponse{
 		Prediction: prediction.Label,
