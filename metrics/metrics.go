@@ -9,7 +9,7 @@ var ModelPredictions = prometheus.NewCounterVec(
 		Name: "model_predictions",
 		Help: "Model predictions",
 	},
-	[]string{"experiments"},
+	[]string{"model"},
 )
 
 func init() {
