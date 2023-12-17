@@ -12,7 +12,15 @@ var ModelPredictions = prometheus.NewCounterVec(
 	[]string{"model"},
 )
 
+var ModelUpdated = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Name: "model_updated",
+		Help: "Ticks when the model changed and is updated.",
+	},
+	[]string{"model"},
+)
+
 func init() {
 	// Register the custom counter metric with Prometheus
-	prometheus.MustRegister(ModelPredictions)
+	prometheus.MustRegister(ModelPredictions, ModelUpdated)
 }

@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"jackpot-mab/reward-predictor/metrics"
 	"jackpot-mab/reward-predictor/s3"
 	"log"
 	"time"
@@ -54,6 +55,7 @@ func (c *CronLoaderImpl) loadModels() {
 				log.Print(err.Error())
 				return
 			}
+			metrics.ModelUpdated.WithLabelValues(model.Name)
 		}
 
 		model.Body.Close()
