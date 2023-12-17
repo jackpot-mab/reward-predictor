@@ -55,7 +55,7 @@ func (c *CronLoaderImpl) loadModels() {
 				log.Print(err.Error())
 				return
 			}
-			metrics.ModelUpdated.WithLabelValues(model.Name)
+			metrics.ModelUpdated.WithLabelValues(model.Name).Inc()
 		}
 
 		model.Body.Close()
