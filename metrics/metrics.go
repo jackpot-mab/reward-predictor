@@ -6,7 +6,7 @@ import (
 
 var ModelPredictions = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "model_predictions",
+		Name: "reward_predictor_model_predictions",
 		Help: "Model predictions",
 	},
 	[]string{"model"},
@@ -14,7 +14,7 @@ var ModelPredictions = prometheus.NewCounterVec(
 
 var ModelUpdated = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "model_updated",
+		Name: "reward_predictor_model_updated",
 		Help: "Ticks when the model changed and is updated.",
 	},
 	[]string{"model"},
