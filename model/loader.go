@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const BucketName = "model"
+const BucketName = "jackpot-bucket"
 
 // CronLoader is a process that is intended to run in the
 // background that reads the model S3 folder and if it

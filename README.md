@@ -18,7 +18,7 @@ docker run -d --name s3 -p 9000:9000 -p 9001:9001 quay.io/minio/minio server /da
 ```
 - The default user and password is minioadmin.
 - Create create credentials and store them in a .env file 
-- Create a bucket named "model" and store the models there.
+- Create a bucket named "jackpot-bucket" and store the models there.
 
 ### Set up onnxruntime
 The models are supposed to be saved in ONNX format. To load and run inferences on these models, the 

@@ -58,7 +58,7 @@ func main() {
 	}
 
 	s3Reader, err := s3.MakeReader(&s3.AwsConfig{
-		Region:           "us-east-1",
+		Region:           "us-east-2",
 		AwsKey:           key,
 		AwsSecret:        secret,
 		Endpoint:         endpoint,
