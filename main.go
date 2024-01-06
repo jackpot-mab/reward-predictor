@@ -8,6 +8,7 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	ort "github.com/yalue/onnxruntime_go"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"jackpot-mab/reward-predictor/controller"
 	"jackpot-mab/reward-predictor/docs"
 	"jackpot-mab/reward-predictor/model"
@@ -86,6 +87,9 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	router := gin.Default()
 
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(router)
+
 	predictorController := controller.RewardPredictorController{
 		ModelStore: modelStore,
 	}
@@ -98,7 +102,8 @@ func main() {
 		}
 	}
 
-	router.GET("/metrics", prometheusHandler())
+	//router.GET("/metrics", prometheusHandler())
+
 	router.GET("/", healthCheck)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.Run("0.0.0.0:8092")
