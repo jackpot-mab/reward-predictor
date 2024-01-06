@@ -11,12 +11,13 @@ import (
 )
 
 type Reader interface {
-	Read(bucketName string, objectKey string) (*exchange.File, error)
-	List(bucketName string) []string
+	Read(objectKey string) (*exchange.File, error)
+	List() []string
 }
 
 type ReaderImpl struct {
-	s3Client *s3.S3
+	s3Client   *s3.S3
+	bucketName string
 }
 
 func MakeReader(config *AwsConfig) (Reader, error) {
@@ -29,12 +30,12 @@ func MakeReader(config *AwsConfig) (Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &ReaderImpl{s3Client: s3.New(sess)}, nil
+	return &ReaderImpl{s3Client: s3.New(sess), bucketName: config.S3Bucket}, nil
 }
 
-func (s *ReaderImpl) List(bucketName string) []string {
+func (s *ReaderImpl) List() []string {
 	params := &s3.ListObjectsInput{
-		Bucket: aws.String(bucketName),
+		Bucket: aws.String(s.bucketName),
 		Prefix: aws.String(""),
 	}
 
@@ -53,9 +54,9 @@ func (s *ReaderImpl) List(bucketName string) []string {
 	return result
 }
 
-func (s *ReaderImpl) Read(bucketName string, objectKey string) (*exchange.File, error) {
+func (s *ReaderImpl) Read(objectKey string) (*exchange.File, error) {
 	output, err := s.s3Client.GetObject(&s3.GetObjectInput{
-		Bucket: aws.String(bucketName),
+		Bucket: aws.String(s.bucketName),
 		Key:    aws.String(objectKey),
 	})
 

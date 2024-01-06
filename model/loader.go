@@ -36,10 +36,10 @@ func InitCronLoader(s3Reader s3.Reader, initialStore Store) CronLoader {
 func (c *CronLoaderImpl) loadModels() {
 
 	// Scan bucket and load all files as onnx models.
-	modelsToLoad := c.s3Reader.List(BucketName)
+	modelsToLoad := c.s3Reader.List()
 
 	for _, m := range modelsToLoad {
-		model, err := c.s3Reader.Read(BucketName, m)
+		model, err := c.s3Reader.Read(m)
 		if err != nil {
 			log.Print(fmt.Sprintf("Error reading model from s3: %s", model.Name))
 			log.Print(err.Error())

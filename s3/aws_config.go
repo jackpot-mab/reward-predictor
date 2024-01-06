@@ -6,4 +6,5 @@ type AwsConfig struct {
 	AwsSecret        string
 	Endpoint         string
 	S3ForcePathStyle bool
+	S3Bucket         string
 }

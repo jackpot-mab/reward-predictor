@@ -50,19 +50,22 @@ func main() {
 
 	key := os.Getenv("AWS_KEY")
 	secret := os.Getenv("AWS_SECRET")
+	region := os.Getenv("AWS_REGION")
 	endpoint := os.Getenv("ENDPOINT")
 	s3ForcePathStyle, err := strconv.ParseBool(os.Getenv("S3_FORCE_PATH_STYLE"))
+	s3Bucket := os.Getenv("S3_BUCKET")
 
 	if err != nil {
 		log.Fatalf("Error loading s3 force path style prop: %v", err)
 	}
 
 	s3Reader, err := s3.MakeReader(&s3.AwsConfig{
-		Region:           "us-east-2",
+		Region:           region,
 		AwsKey:           key,
 		AwsSecret:        secret,
 		Endpoint:         endpoint,
 		S3ForcePathStyle: s3ForcePathStyle,
+		S3Bucket:         s3Bucket,
 	})
 
 	if err != nil {
