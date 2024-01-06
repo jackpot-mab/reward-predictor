@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	ort "github.com/yalue/onnxruntime_go"
@@ -22,14 +21,6 @@ import (
 
 func healthCheck(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, "jackpot-mab:reward-predictor")
-}
-
-func prometheusHandler() gin.HandlerFunc {
-	h := promhttp.Handler()
-
-	return func(c *gin.Context) {
-		h.ServeHTTP(c.Writer, c.Request)
-	}
 }
 
 func main() {
@@ -101,8 +92,6 @@ func main() {
 			eg.POST("/", predictorController.PredictExperimentRewards)
 		}
 	}
-
-	//router.GET("/metrics", prometheusHandler())
 
 	router.GET("/", healthCheck)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
