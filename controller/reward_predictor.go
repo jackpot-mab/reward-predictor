@@ -21,7 +21,8 @@ type PredictionRequest struct {
 }
 
 type PredictionResponse struct {
-	Prediction float32 `json:"prediction"`
+	Prediction    float32   `json:"prediction"`
+	Probabilities []float32 `json:"probabilities"`
 }
 
 // PredictExperimentRewards godoc
@@ -56,15 +57,11 @@ func (r *RewardPredictorController) PredictExperimentRewards(g *gin.Context) {
 		return
 	}
 
-	if predictionRequest.Sample {
-		// sample prediction TODO
-		// to test a thompson sampling-like model.
-	}
-
 	metrics.ModelPredictions.WithLabelValues(predictionRequest.Model).Inc()
 
 	g.JSON(http.StatusOK, PredictionResponse{
-		Prediction: prediction.Label,
+		Prediction:    prediction.Label,
+		Probabilities: prediction.Probabilities,
 	})
 
 }
